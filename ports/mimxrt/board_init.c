@@ -40,6 +40,7 @@
 #include "clock_config.h"
 #include "modmachine.h"
 
+volatile uint32_t systick_ms = 0;
 
 const uint8_t dcd_data[] = { 0x00 };
 
@@ -84,11 +85,6 @@ void board_init(void) {
 
     // PIT
     machine_timer_init_PIT();
-
-    // SDCard
-    #if MICROPY_PY_MACHINE_SDCARD
-    machine_sdcard_init0();
-    #endif
 }
 
 void USB_OTG1_IRQHandler(void) {

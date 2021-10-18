@@ -540,6 +540,9 @@ STATIC const byte *mp_prof_opcode_decode(const byte *ip, const mp_uint_t *const_
             instruction->qstr_opname = MP_QSTR_LOAD_NAME;
             instruction->arg = qst;
             instruction->argobj = MP_OBJ_NEW_QSTR(qst);
+            if (MICROPY_OPT_CACHE_MAP_LOOKUP_IN_BYTECODE) {
+                instruction->argobjex_cache = MP_OBJ_NEW_SMALL_INT(*ip++);
+            }
             break;
 
         case MP_BC_LOAD_GLOBAL:
@@ -547,6 +550,9 @@ STATIC const byte *mp_prof_opcode_decode(const byte *ip, const mp_uint_t *const_
             instruction->qstr_opname = MP_QSTR_LOAD_GLOBAL;
             instruction->arg = qst;
             instruction->argobj = MP_OBJ_NEW_QSTR(qst);
+            if (MICROPY_OPT_CACHE_MAP_LOOKUP_IN_BYTECODE) {
+                instruction->argobjex_cache = MP_OBJ_NEW_SMALL_INT(*ip++);
+            }
             break;
 
         case MP_BC_LOAD_ATTR:
@@ -554,6 +560,9 @@ STATIC const byte *mp_prof_opcode_decode(const byte *ip, const mp_uint_t *const_
             instruction->qstr_opname = MP_QSTR_LOAD_ATTR;
             instruction->arg = qst;
             instruction->argobj = MP_OBJ_NEW_QSTR(qst);
+            if (MICROPY_OPT_CACHE_MAP_LOOKUP_IN_BYTECODE) {
+                instruction->argobjex_cache = MP_OBJ_NEW_SMALL_INT(*ip++);
+            }
             break;
 
         case MP_BC_LOAD_METHOD:
@@ -609,6 +618,9 @@ STATIC const byte *mp_prof_opcode_decode(const byte *ip, const mp_uint_t *const_
             instruction->qstr_opname = MP_QSTR_STORE_ATTR;
             instruction->arg = qst;
             instruction->argobj = MP_OBJ_NEW_QSTR(qst);
+            if (MICROPY_OPT_CACHE_MAP_LOOKUP_IN_BYTECODE) {
+                instruction->argobjex_cache = MP_OBJ_NEW_SMALL_INT(*ip++);
+            }
             break;
 
         case MP_BC_STORE_SUBSCR:

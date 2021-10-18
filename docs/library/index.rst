@@ -65,7 +65,6 @@ library.
    json.rst
    math.rst
    os.rst
-   random.rst
    re.rst
    select.rst
    socket.rst
@@ -120,7 +119,6 @@ The following libraries are specific to the pyboard.
   :maxdepth: 2
 
   pyb.rst
-  stm.rst
   lcd160cr.rst
 
 

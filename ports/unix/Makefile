@@ -269,6 +269,7 @@ ifneq ($(FROZEN_MANIFEST)$(FROZEN_MPY_DIR),)
 CFLAGS += -DMICROPY_QSTR_EXTRA_POOL=mp_qstr_frozen_const_pool
 CFLAGS += -DMICROPY_MODULE_FROZEN_MPY
 CFLAGS += -DMPZ_DIG_SIZE=16 # force 16 bits to work on both 32 and 64 bit archs
+MPY_CROSS_FLAGS += -mcache-lookup-bc
 endif
 
 ifneq ($(FROZEN_MANIFEST)$(FROZEN_DIR),)
@@ -284,7 +285,9 @@ endif
 CXXFLAGS += $(filter-out -Wmissing-prototypes -Wold-style-definition -std=gnu99,$(CFLAGS) $(CXXFLAGS_MOD))
 
 ifeq ($(MICROPY_FORCE_32BIT),1)
-RUN_TESTS_MPY_CROSS_FLAGS = --mpy-cross-flags='-march=x86'
+RUN_TESTS_MPY_CROSS_FLAGS = --mpy-cross-flags='-mcache-lookup-bc -march=x86'
+else
+RUN_TESTS_MPY_CROSS_FLAGS = --mpy-cross-flags='-mcache-lookup-bc'
 endif
 
 ifeq ($(CROSS_COMPILE),arm-linux-gnueabi-)

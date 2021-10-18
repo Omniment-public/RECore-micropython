@@ -36,7 +36,6 @@
 #define CDC_ITF TINYUSB_CDC_ACM_0
 
 static uint8_t usb_rx_buf[CONFIG_USB_CDC_RX_BUFSIZE];
-static uint8_t usb_cdc_connected;
 
 static void usb_callback_rx(int itf, cdcacm_event_t *event) {
     // TODO: what happens if more chars come in during this function, are they lost?
@@ -59,13 +58,6 @@ static void usb_callback_rx(int itf, cdcacm_event_t *event) {
     }
 }
 
-void usb_callback_line_state_changed(int itf, cdcacm_event_t *event) {
-    int dtr = event->line_state_changed_data.dtr;
-    int rts = event->line_state_changed_data.rts;
-    // If dtr && rts are both true, the CDC is connected to a HOST.
-    usb_cdc_connected = dtr && rts;
-}
-
 void usb_init(void) {
     // Initialise the USB with defaults.
     tinyusb_config_t tusb_cfg = {0};
@@ -78,43 +70,23 @@ void usb_init(void) {
         .rx_unread_buf_sz = 256,
         .callback_rx = &usb_callback_rx,
         .callback_rx_wanted_char = NULL,
-        .callback_line_state_changed = &usb_callback_line_state_changed,
+        .callback_line_state_changed = NULL,
         .callback_line_coding_changed = NULL
     };
-    usb_cdc_connected = 0;
     ESP_ERROR_CHECK(tusb_cdc_acm_init(&amc_cfg));
-
 }
 
 void usb_tx_strn(const char *str, size_t len) {
-    // If no HOST is connected, we can exit this early.
-    if (usb_cdc_connected == 0) {
-        return;
-    }
-
     while (len) {
-        // Get amount of CDC output buffer space available, making sure
-        // there is at least one byte available.
-        size_t avail = tud_cdc_n_write_available(CDC_ITF);
-        if (avail == 0) {
-            if (tinyusb_cdcacm_write_flush(CDC_ITF, pdMS_TO_TICKS(1000)) != ESP_OK) {
-                return;
-            }
-            avail = tud_cdc_n_write_available(CDC_ITF);
-        }
-
-        // Write as much data as possible.
         size_t l = len;
-        if (l > avail) {
-            l = avail;
+        if (l > CONFIG_USB_CDC_TX_BUFSIZE) {
+            l = CONFIG_USB_CDC_TX_BUFSIZE;
         }
-        tud_cdc_n_write(CDC_ITF, (uint8_t *)str, l);
+        tinyusb_cdcacm_write_queue(CDC_ITF, (uint8_t *)str, l);
+        tinyusb_cdcacm_write_flush(CDC_ITF, pdMS_TO_TICKS(1000));
         str += l;
         len -= l;
     }
-
-    // Queue a flush to write out the data in the CDC buffer (if any).
-    tud_cdc_n_write_flush(CDC_ITF);
 }
 
 #endif // CONFIG_USB_ENABLED

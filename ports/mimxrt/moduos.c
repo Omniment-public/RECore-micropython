@@ -31,7 +31,6 @@
 #include "py/objstr.h"
 #include "py/runtime.h"
 #include "extmod/vfs.h"
-#include "extmod/vfs_fat.h"
 #include "extmod/vfs_lfs.h"
 #include "genhdr/mpversion.h"
 #include "fsl_trng.h"

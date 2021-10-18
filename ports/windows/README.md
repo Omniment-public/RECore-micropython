@@ -25,7 +25,8 @@ Install Cygwin, then install following packages using Cygwin's setup.exe:
 * mingw64-i686-gcc-core
 * mingw64-x86_64-gcc-core
 * make
-* python3
+
+Also install the python3 package, or install Python globally for Windows (see below).
 
 Build using:
 

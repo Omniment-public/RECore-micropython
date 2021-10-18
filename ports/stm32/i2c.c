@@ -268,12 +268,7 @@ int i2c_write(i2c_t *i2c, const uint8_t *src, size_t len, size_t next_len) {
     return num_acks;
 }
 
-#elif defined(STM32F0) || defined(STM32F7) || defined(STM32H7)
-
-#if defined(STM32H7)
-#define APB1ENR            APB1LENR
-#define RCC_APB1ENR_I2C1EN RCC_APB1LENR_I2C1EN
-#endif
+#elif defined(STM32F0) || defined(STM32F7)
 
 STATIC uint16_t i2c_timeout_ms[MICROPY_HW_MAX_I2C];
 
@@ -473,7 +468,7 @@ int i2c_write(i2c_t *i2c, const uint8_t *src, size_t len, size_t next_len) {
 
 #endif
 
-#if defined(STM32F0) || defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+#if defined(STM32F0) || defined(STM32F4) || defined(STM32F7)
 
 int i2c_readfrom(i2c_t *i2c, uint16_t addr, uint8_t *dest, size_t len, bool stop) {
     int ret;

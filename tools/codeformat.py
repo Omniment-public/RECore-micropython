@@ -52,7 +52,6 @@ PATHS = [
     "examples/**/*.py",
     "extmod/**/*.py",
     "ports/**/*.py",
-    "ports/mimxrt/**/*.[ch]",
     "py/**/*.py",
     "tools/**/*.py",
     "tests/**/*.py",
